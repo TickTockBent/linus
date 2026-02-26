@@ -1,0 +1,45 @@
+{
+  "name": "@ticktockbent/linus",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "MCP server for dev.to (Forem) operations — article CRUD, draft-first publishing, series management, tag discovery, canonical URL cross-posting, and liquid tag awareness.",
+  "main": "dist/index.js",
+  "bin": {
+    "linus": "dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "start": "node dist/index.js",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "generate-types": "openapi-typescript https://raw.githubusercontent.com/forem/forem-docs/main/api_v1.json -o src/types/forem-api.d.ts",
+    "inspect": "npx @modelcontextprotocol/inspector node dist/index.js",
+    "prepublishOnly": "npm run build"
+  },
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "keywords": [
+    "mcp",
+    "devto",
+    "forem",
+    "blog",
+    "publishing"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.27.1",
+    "gray-matter": "^4.0.3",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@types/node": "^25.3.1",
+    "openapi-typescript": "^7.13.0",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.18"
+  }
+}
