@@ -235,6 +235,17 @@ export class ForemClient {
     return this.request<ArticleFull>('PUT', `/articles/${articleId}`, { article }, 'update');
   }
 
+  async searchArticles(params: {
+    q: string;
+    page?: number;
+    per_page?: number;
+  }): Promise<ArticleIndex[]> {
+    const searchParams = new URLSearchParams({ q: params.q });
+    if (params.page !== undefined) searchParams.set('page', String(params.page));
+    if (params.per_page !== undefined) searchParams.set('per_page', String(params.per_page));
+    return this.request<ArticleIndex[]>('GET', `/articles/search?${searchParams.toString()}`);
+  }
+
   // ── Comments ────────────────────────────────────────────────────
 
   async getCommentsByArticleId(articleId: number): Promise<CommentFull[]> {

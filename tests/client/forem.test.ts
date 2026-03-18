@@ -94,6 +94,20 @@ describe('ForemClient', () => {
     });
   });
 
+  describe('searchArticles', () => {
+    it('searches articles by keyword', async () => {
+      const articles = [{ id: 1, title: 'Rust Async' }];
+      mockFetch.mockResolvedValueOnce(jsonResponse(articles));
+
+      const result = await client.searchArticles({ q: 'async rust', per_page: 5 });
+      expect(result).toHaveLength(1);
+      expect(mockFetch).toHaveBeenCalledWith(
+        expect.stringContaining('/articles/search?q=async+rust&per_page=5'),
+        expect.objectContaining({ method: 'GET' }),
+      );
+    });
+  });
+
   describe('createArticle', () => {
     it('creates a draft article', async () => {
       const responseData = { id: 123, title: 'New Draft', published: false };

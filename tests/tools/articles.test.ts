@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import {
   handleGetArticle,
   handleListMyArticles,
+  handleSearchArticles,
   handleCreateArticle,
   handleUpdateArticle,
   handleSetPublished,
@@ -13,6 +14,7 @@ function createMockClient(): ForemClient {
     getArticleById: vi.fn(),
     getArticleByPath: vi.fn(),
     listArticles: vi.fn(),
+    searchArticles: vi.fn(),
     listMyPublishedArticles: vi.fn(),
     listMyUnpublishedArticles: vi.fn(),
     listMyAllArticles: vi.fn(),
@@ -104,6 +106,51 @@ describe('handleListMyArticles', () => {
 
     await handleListMyArticles(client, {});
     expect(client.listMyAllArticles).toHaveBeenCalled();
+  });
+});
+
+describe('handleSearchArticles', () => {
+  let client: ReturnType<typeof createMockClient>;
+
+  beforeEach(() => {
+    client = createMockClient();
+  });
+
+  it('searches articles by keyword', async () => {
+    (client.searchArticles as ReturnType<typeof vi.fn>).mockResolvedValue([
+      { id: 1, title: 'Async Rust Guide' },
+      { id: 2, title: 'Rust Performance Tips' },
+    ]);
+
+    const result = await handleSearchArticles(client, { query: 'async rust' });
+    expect(result.content[0].text).toContain('Async Rust Guide');
+    expect(client.searchArticles).toHaveBeenCalledWith({
+      q: 'async rust',
+      page: undefined,
+      per_page: undefined,
+    });
+  });
+
+  it('passes pagination params', async () => {
+    (client.searchArticles as ReturnType<typeof vi.fn>).mockResolvedValue([]);
+
+    await handleSearchArticles(client, { query: 'test', page: 2, per_page: 5 });
+    expect(client.searchArticles).toHaveBeenCalledWith({
+      q: 'test',
+      page: 2,
+      per_page: 5,
+    });
+  });
+
+  it('returns error on API failure', async () => {
+    const { LinusError } = await import('../../src/utils/errors.js');
+    (client.searchArticles as ReturnType<typeof vi.fn>).mockRejectedValue(
+      new LinusError('api_error', 'Search failed'),
+    );
+
+    const result = await handleSearchArticles(client, { query: 'fail' });
+    expect((result as { isError: boolean }).isError).toBe(true);
+    expect(result.content[0].text).toContain('api_error');
   });
 });
 
