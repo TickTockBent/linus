@@ -95,6 +95,7 @@ export function registerUserTools(server: McpServer, client: ForemClient): void 
       id: z.number().optional().describe('User ID'),
       username: z.string().optional().describe('Username'),
     },
+    { readOnlyHint: true, openWorldHint: true },
     async (args) => handleGetUser(client, args),
   );
 
@@ -105,6 +106,7 @@ export function registerUserTools(server: McpServer, client: ForemClient): void 
       page: z.number().optional().describe('Pagination page'),
       per_page: z.number().optional().describe('Items per page'),
     },
+    { readOnlyHint: true, openWorldHint: true },
     async (args) => handleGetFollowers(client, args),
   );
 
@@ -121,6 +123,7 @@ export function registerUserTools(server: McpServer, client: ForemClient): void 
       page: z.number().optional().describe('Pagination page (for articles/members)'),
       per_page: z.number().optional().describe('Items per page (for articles/members)'),
     },
+    { readOnlyHint: true, openWorldHint: true },
     async (args) => handleGetOrg(client, args),
   );
 }

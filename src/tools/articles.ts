@@ -276,6 +276,7 @@ export function registerArticleTools(
       path: z.string().optional().describe('Article path: username/slug'),
       url: z.string().optional().describe('Full dev.to article URL'),
     },
+    { readOnlyHint: true, openWorldHint: true },
     async (args) => handleGetArticle(client, args),
   );
 
@@ -291,6 +292,7 @@ export function registerArticleTools(
       page: z.number().optional().describe('Pagination page'),
       per_page: z.number().optional().describe('Items per page'),
     },
+    { readOnlyHint: true, openWorldHint: true },
     async (args) => handleListMyArticles(client, args),
   );
 
@@ -309,6 +311,7 @@ export function registerArticleTools(
       page: z.number().optional().describe('Pagination page'),
       collection_id: z.number().optional().describe('Filter by series/collection ID'),
     },
+    { readOnlyHint: true, openWorldHint: true },
     async (args) => handleListArticles(client, args),
   );
 
@@ -326,6 +329,7 @@ export function registerArticleTools(
       organization_id: z.number().optional().describe('Organization ID to publish under'),
       published: z.boolean().optional().describe('Publish immediately (default: false)'),
     },
+    { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: true },
     async (args) => handleCreateArticle(client, args, defaultPublished),
   );
 
@@ -352,6 +356,7 @@ export function registerArticleTools(
         .describe('Organization ID (null to remove)'),
       published: z.boolean().optional().describe('Set published state'),
     },
+    { readOnlyHint: false, destructiveHint: false, idempotentHint: true, openWorldHint: true },
     async (args) => handleUpdateArticle(client, args),
   );
 
@@ -362,6 +367,7 @@ export function registerArticleTools(
       article_id: z.number().describe('Article ID'),
       published: z.boolean().describe('true to publish, false to unpublish'),
     },
+    { readOnlyHint: false, destructiveHint: false, idempotentHint: true, openWorldHint: true },
     async (args) => handleSetPublished(client, args),
   );
 }
