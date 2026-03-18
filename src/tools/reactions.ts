@@ -52,6 +52,7 @@ export function registerReactionTools(server: McpServer, client: ForemClient): v
         .enum(['Article', 'Comment', 'User'])
         .describe('Type of the reactable'),
     },
+    { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: true },
     async (args) => handleToggleReaction(client, args),
   );
 }

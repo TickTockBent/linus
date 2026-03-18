@@ -92,6 +92,7 @@ export function registerUtilityTools(server: McpServer, client: ForemClient): vo
       description: z.string().optional().describe('Description'),
       published: z.boolean().optional().describe('Published state'),
     },
+    { readOnlyHint: true, openWorldHint: false },
     async (args) => handleValidateArticle(client, args),
   );
 
@@ -107,6 +108,7 @@ export function registerUtilityTools(server: McpServer, client: ForemClient): vo
         .default(true)
         .describe('Convert liquid tags to standard equivalents (default: true)'),
     },
+    { readOnlyHint: true, openWorldHint: false },
     async (args) => handlePrepareCrosspost(client, args),
   );
 }

@@ -49,6 +49,7 @@ export function registerAuthTools(server: McpServer, client: ForemClient): void 
     'linus_auth_status',
     'Check authentication state, username, profile info, and organization memberships.',
     {},
+    { readOnlyHint: true, openWorldHint: false },
     async () => handleAuthStatus(client),
   );
 }

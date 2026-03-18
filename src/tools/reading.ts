@@ -87,6 +87,7 @@ export function registerReadingTools(server: McpServer, client: ForemClient): vo
       article_id: z.number().optional().describe('Article ID to get comments for'),
       comment_id: z.string().optional().describe('Single comment ID'),
     },
+    { readOnlyHint: true, openWorldHint: true },
     async (args) => handleGetComments(client, args),
   );
 
@@ -102,6 +103,7 @@ export function registerReadingTools(server: McpServer, client: ForemClient): vo
       page: z.number().optional().describe('Pagination page'),
       per_page: z.number().optional().describe('Items per page'),
     },
+    { readOnlyHint: true, openWorldHint: true },
     async (args) => handleListTags(client, args),
   );
 
@@ -112,6 +114,7 @@ export function registerReadingTools(server: McpServer, client: ForemClient): vo
       page: z.number().optional().describe('Pagination page'),
       per_page: z.number().optional().describe('Items per page'),
     },
+    { readOnlyHint: true, openWorldHint: true },
     async (args) => handleGetReadingList(client, args),
   );
 }
