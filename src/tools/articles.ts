@@ -3,6 +3,7 @@ import { z } from 'zod';
 import type { ForemClient } from '../client/forem.js';
 import { LinusError } from '../utils/errors.js';
 import { mergeAndNormalize } from '../content/front-matter.js';
+import { logger } from '../utils/logger.js';
 
 // ── Helpers ──────────────────────────────────────────────────────
 
@@ -190,9 +191,11 @@ export async function handleCreateArticle(
       articleParams.body_markdown = body;
     }
 
+    logger.info({ title: args.title, published, tags: args.tags }, 'Creating article');
     const article = await client.createArticle(
       articleParams as Parameters<typeof client.createArticle>[0],
     );
+    logger.info({ articleId: (article as { id?: number }).id, published }, 'Article created');
 
     const response: Record<string, unknown> = { article };
     if (conflicts.length > 0) {
@@ -242,6 +245,7 @@ export async function handleUpdateArticle(
       articleParams.published = args.published;
     }
 
+    logger.info({ articleId: args.article_id, fields: Object.keys(articleParams) }, 'Updating article');
     const article = await client.updateArticle(
       args.article_id,
       articleParams as Parameters<typeof client.updateArticle>[1],
@@ -265,6 +269,8 @@ export async function handleSetPublished(
   args: { article_id: number; published: boolean },
 ) {
   try {
+    const action = args.published ? 'publishing' : 'unpublishing';
+    logger.info({ articleId: args.article_id, action }, 'Changing publish state');
     const article = await client.updateArticle(args.article_id, {
       published: args.published,
     });

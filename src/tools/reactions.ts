@@ -3,6 +3,7 @@ import { z } from 'zod';
 import type { ForemClient } from '../client/forem.js';
 import { LinusError } from '../utils/errors.js';
 import type { ReactionCategory, ReactableType } from '../types.js';
+import { logger } from '../utils/logger.js';
 
 function jsonResponse(data: unknown) {
   return {
@@ -28,6 +29,7 @@ export async function handleToggleReaction(
   args: { category: string; reactable_id: number; reactable_type: string },
 ) {
   try {
+    logger.info({ category: args.category, reactableId: args.reactable_id, reactableType: args.reactable_type }, 'Toggling reaction');
     const result = await client.toggleReaction(
       args.category as ReactionCategory,
       args.reactable_id,

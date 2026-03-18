@@ -1,6 +1,7 @@
 import { buildHeaders } from '../utils/headers.js';
 import { LinusError, mapHttpStatusToError } from '../utils/errors.js';
 import { RateLimiter } from './rate-limiter.js';
+import { logger } from '../utils/logger.js';
 import type {
   ArticleFull,
   ArticleIndex,
@@ -64,8 +65,10 @@ export class ForemClient {
 
       let response: Response;
       try {
+        logger.debug({ method, path, attempt: attempt + 1 }, 'API request');
         response = await fetch(url, fetchOptions);
       } catch (fetchError) {
+        logger.error({ method, path, error: String(fetchError) }, 'Network error');
         throw new LinusError('api_error', `Network error: ${String(fetchError)}`, {
           path,
           method,
@@ -74,6 +77,7 @@ export class ForemClient {
 
       if (response.status === 429) {
         const delay = this.rateLimiter.recordRateLimitHit();
+        logger.warn({ method, path, attempt: attempt + 1, retryMs: delay }, 'Rate limited, retrying');
         lastError = new LinusError('rate_limited', 'Rate limit exceeded', {
           httpStatus: 429,
           retryAfter: delay / 1000,
@@ -99,6 +103,7 @@ export class ForemClient {
       }
 
       if (!response.ok) {
+        logger.warn({ method, path, status: response.status }, 'API error response');
         throw mapHttpStatusToError(response.status, responseBody);
       }
 
