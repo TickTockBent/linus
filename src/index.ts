@@ -10,12 +10,12 @@ import { registerReadingTools } from './tools/reading.js';
 import { registerUserTools } from './tools/users.js';
 import { registerReactionTools } from './tools/reactions.js';
 import { registerUtilityTools } from './tools/utilities.js';
+import { logger } from './utils/logger.js';
 
 async function main() {
   const apiKey = process.env.DEVTO_API_KEY;
   if (!apiKey) {
-    console.error('DEVTO_API_KEY environment variable is required.');
-    console.error('Get your API key at: https://dev.to/settings/extensions');
+    logger.fatal('DEVTO_API_KEY environment variable is required. Get your API key at: https://dev.to/settings/extensions');
     process.exit(1);
   }
 
@@ -27,9 +27,9 @@ async function main() {
   // Validate API key on startup
   try {
     const authState = await validateApiKey(client);
-    console.error(`Authenticated as: ${authState.user?.username ?? 'unknown'}`);
+    logger.info({ username: authState.user?.username }, 'Authenticated');
   } catch (error) {
-    console.error('Failed to validate API key:', String(error));
+    logger.fatal({ error: String(error) }, 'Failed to validate API key');
     process.exit(1);
   }
 
@@ -52,6 +52,6 @@ async function main() {
 }
 
 main().catch((error) => {
-  console.error('Fatal error:', error);
+  logger.fatal({ error }, 'Fatal error');
   process.exit(1);
 });
