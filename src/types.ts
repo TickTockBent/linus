@@ -172,8 +172,8 @@ export interface CrosspostResult {
 
 // ── Reaction types ──
 
-export type ReactionCategory = 'like' | 'unicorn' | 'readinglist';
-export type ReactableType = 'Article' | 'Comment';
+export type ReactionCategory = 'like' | 'unicorn' | 'exploding_head' | 'raised_hands' | 'fire';
+export type ReactableType = 'Article' | 'Comment' | 'User';
 
 export interface ReactionResult {
   result: string;

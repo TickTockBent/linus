@@ -42,14 +42,14 @@ export async function handleToggleReaction(
 export function registerReactionTools(server: McpServer, client: ForemClient): void {
   server.tool(
     'linus_toggle_reaction',
-    'Toggle a reaction on an article or comment.',
+    'Toggle a reaction on an article, comment, or user.',
     {
       category: z
-        .enum(['like', 'unicorn', 'readinglist'])
+        .enum(['like', 'unicorn', 'exploding_head', 'raised_hands', 'fire'])
         .describe('Reaction type'),
-      reactable_id: z.number().describe('ID of the article or comment'),
+      reactable_id: z.number().describe('ID of the article, comment, or user'),
       reactable_type: z
-        .enum(['Article', 'Comment'])
+        .enum(['Article', 'Comment', 'User'])
         .describe('Type of the reactable'),
     },
     async (args) => handleToggleReaction(client, args),
