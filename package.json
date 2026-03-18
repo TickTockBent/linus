@@ -30,7 +30,16 @@
     "blog",
     "publishing"
   ],
+  "author": "Wes <ticktockbent@users.noreply.github.com> (https://github.com/TickTockBent)",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TickTockBent/linus.git"
+  },
+  "homepage": "https://github.com/TickTockBent/linus#readme",
+  "bugs": {
+    "url": "https://github.com/TickTockBent/linus/issues"
+  },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.27.1",
     "gray-matter": "^4.0.3",
