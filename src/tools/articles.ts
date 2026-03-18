@@ -138,6 +138,22 @@ export async function handleListArticles(
   }
 }
 
+export async function handleSearchArticles(
+  client: ForemClient,
+  args: { query: string; page?: number; per_page?: number },
+) {
+  try {
+    const articles = await client.searchArticles({
+      q: args.query,
+      page: args.page,
+      per_page: args.per_page,
+    });
+    return jsonResponse(articles);
+  } catch (error) {
+    return errorResponse(error);
+  }
+}
+
 export async function handleCreateArticle(
   client: ForemClient,
   args: {
@@ -313,6 +329,18 @@ export function registerArticleTools(
     },
     { readOnlyHint: true, openWorldHint: true },
     async (args) => handleListArticles(client, args),
+  );
+
+  server.tool(
+    'linus_search_articles',
+    'Full-text search across published articles by keyword.',
+    {
+      query: z.string().describe('Search query (keywords)'),
+      per_page: z.number().optional().describe('Items per page'),
+      page: z.number().optional().describe('Pagination page'),
+    },
+    { readOnlyHint: true, openWorldHint: true },
+    async (args) => handleSearchArticles(client, args),
   );
 
   server.tool(
